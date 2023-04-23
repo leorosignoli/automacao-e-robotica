@@ -13,6 +13,7 @@
 #define RED_POT_PORT A2
 
 #define TEMP_SENSOR_PORT 8
+#define LIGHT_SENSOR_PORT 7
 #define RELAY_PORT 13
 
 #define TEMPERATURE_LIMIT 28
@@ -27,9 +28,11 @@ enum {
   PWM_RED,
   PWM_BLUE,
   PWM_GREEN,
-  SWITCH_VALUE,
+  MANUAL_LED_SWITCH_VALUE,
   RELAY_SWITCH,
   TEMP_ALARM_TOGGLE,
+  LIGHT_SENSOR_VALUE,
+  TEMPERATURE_SENSOR_VALUE,
   HOLDING_REGS_SIZE
 };
 
@@ -62,6 +65,13 @@ void loop() {
 
   checkIfTemperatureExceedsLimit();
 
+  checkSensors();
+
+}
+
+void checkSensors(){
+  holdingRegs[LIGHT_SENSOR_VALUE] = digitalRead(LIGHT_SENSOR_PORT);
+  holdingRegs[TEMPERATURE_SENSOR_VALUE] = digitalRead(TEMP_SENSOR_PORT);
 }
 
 void checkIfTemperatureExceedsLimit(){
@@ -78,11 +88,11 @@ void setPotenciometerValues() {
 }
 
 void setSwitchValue() {
-  holdingRegs[SWITCH_VALUE] = digitalRead(SWITCH_PORT);
+  holdingRegs[MANUAL_LED_SWITCH_VALUE] = digitalRead(SWITCH_PORT);
 }
 
 boolean isSwitchOn() {
-  return holdingRegs[SWITCH_VALUE] == 1 ;
+  return holdingRegs[MANUAL_LED_SWITCH_VALUE] == 1 ;
 }
 
 
