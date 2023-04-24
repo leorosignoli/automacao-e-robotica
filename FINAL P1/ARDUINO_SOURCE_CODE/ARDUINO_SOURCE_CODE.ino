@@ -13,10 +13,10 @@
 #define RED_POT_PORT A2
 
 #define TEMP_SENSOR_PORT 8
-#define LIGHT_SENSOR_PORT 7
+#define LIGHT_SENSOR_PORT A4
 #define RELAY_PORT 13
 
-#define TEMPERATURE_LIMIT 28
+#define LUMINOSITY_LIMIT 600
 
 enum {
   POT_BLUE,
@@ -55,7 +55,7 @@ void loop() {
   setPotenciometerValues();
   setSwitchValue();
 
-  if ( isSwitchOn() ) {
+  if ( !isSwitchOn() ) {
      writePotenciometerValuesToLed();
   } else {
      writeSliderValuesToLed();
@@ -67,21 +67,36 @@ void loop() {
 
   checkSensors();
 
+  //printValues();
+
 }
 
+void printValues(){
+  
+  Serial.print(holdingRegs[POT_BLUE]);
+  Serial.print("\n");
+  Serial.print(holdingRegs[POT_GREEN]);
+  Serial.print("\n");
+  Serial.print(holdingRegs[POT_RED]);
+}
 void checkSensors(){
-  holdingRegs[LIGHT_SENSOR_VALUE] = digitalRead(LIGHT_SENSOR_PORT);
-  holdingRegs[TEMPERATURE_SENSOR_VALUE] = digitalRead(TEMP_SENSOR_PORT);
+  holdingRegs[LIGHT_SENSOR_VALUE] = analogRead(LIGHT_SENSOR_PORT);
 }
 
 void checkIfTemperatureExceedsLimit(){
-  if (digitalRead(TEMP_SENSOR_PORT) > TEMPERATURE_LIMIT)
+  if (analogRead(TEMP_SENSOR_PORT) > LUMINOSITY_LIMIT)
     holdingRegs[TEMP_ALARM_TOGGLE] = 1;
   else
     holdingRegs[TEMP_ALARM_TOGGLE] = 0;
   
 }
+
 void setPotenciometerValues() {
+  
+  holdingRegs[POT_BLUE] = analogRead(BLUE_POT_PORT);
+  holdingRegs[POT_GREEN] = analogRead(GREEN_POT_PORT);
+  holdingRegs[POT_RED] = analogRead(RED_POT_PORT);
+  
   holdingRegs[BLUE_LED_PORT] = analogRead(BLUE_POT_PORT);
   holdingRegs[GREEN_LED_PORT] = analogRead(GREEN_POT_PORT);
   holdingRegs[RED_LED_PORT] = analogRead(RED_POT_PORT);
@@ -111,9 +126,9 @@ void writeSliderValuesToLed(){
 }
 
 void writeToLed(int red, int green, int blue){
-  analogWrite(BLUE_LED_PORT, blue);
-  analogWrite(RED_LED_PORT, red);
-  analogWrite(GREEN_LED_PORT, green);
+  analogWrite(BLUE_LED_PORT, (int)blue/4);
+  analogWrite(RED_LED_PORT, (int)red/4);
+  analogWrite(GREEN_LED_PORT, (int)green/4);
 }
 
 void checkRelayToggle(){
