@@ -14,25 +14,26 @@
 
 #define TEMP_SENSOR_PORT 8
 #define LIGHT_SENSOR_PORT A4
-#define RELAY_PORT 13
+#define RELAY_PORT 7
 
 #define LUMINOSITY_LIMIT 600
 
 enum {
-  POT_BLUE,
-  POT_GREEN,
-  POT_RED,
-  ELIPSE_SLIDER_BLUE,
-  ELIPSE_SLIDER_GREEN,
-  ELIPSE_SLIDER_RED,
-  PWM_RED,
-  PWM_BLUE,
-  PWM_GREEN,
-  MANUAL_LED_SWITCH_VALUE,
-  RELAY_SWITCH,
+  POT_BLUE, //1
+  POT_GREEN, //2
+  POT_RED, //3
+  ELIPSE_SLIDER_BLUE, //4
+  ELIPSE_SLIDER_GREEN, //5
+  ELIPSE_SLIDER_RED, //6
+  PWM_RED, //7
+  PWM_BLUE, //8 
+  PWM_GREEN, //9
+  MANUAL_LED_SWITCH_VALUE, //10
+  RELAY_SWITCH, //11
   TEMP_ALARM_TOGGLE,
   LIGHT_SENSOR_VALUE,
   TEMPERATURE_SENSOR_VALUE,
+  RELAY_TOGGLE_TEST, //15
   HOLDING_REGS_SIZE
 };
 
@@ -132,9 +133,9 @@ void writeToLed(int red, int green, int blue){
 }
 
 void checkRelayToggle(){
-  if (holdingRegs[RELAY_SWITCH] == 1 ) {
+  if ( holdingRegs[RELAY_TOGGLE_TEST] == 1 ) {
     digitalWrite(RELAY_PORT, HIGH);
-  } else if( holdingRegs[RELAY_SWITCH] ==  0 ){
+  } else if( holdingRegs[RELAY_TOGGLE_TEST] ==  0 ){
     digitalWrite(RELAY_PORT, LOW);
   }
 }
